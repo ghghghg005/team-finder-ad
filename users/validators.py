@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 from django.core.exceptions import ValidationError
 from users import constants
 
+
 def validate_github_url(url):
     """Ensure a (already well-formed) URL points to github.com."""
     if not url:

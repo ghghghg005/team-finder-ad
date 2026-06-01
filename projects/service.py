@@ -2,6 +2,7 @@ from http import HTTPStatus
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 
+
 def auth_required_json():
     return JsonResponse(
         {"status": "error", "detail": "Требуется авторизация."},

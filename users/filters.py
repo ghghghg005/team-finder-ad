@@ -1,3 +1,6 @@
+from users import constants
+
+
 def _filter_users(me, key, users):
     """Apply one of the four predefined variant-1 user filters.""" 
     if key == constants.FILTER_FAVORITE_OWNERS: 
@@ -8,4 +11,4 @@ def _filter_users(me, key, users):
         return users.filter(favorites__owner=me) 
     if key == constants.FILTER_PARTICIPANTS_OF_MINE: 
         return users.filter(participated_projects__owner=me) 
-    return users 
+    return users

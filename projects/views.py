@@ -1,25 +1,23 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from projects.service import auth_required_json
 from django.db.models import Count
-from projects.service import paginate
 from http import HTTPStatus
 
 from projects import constants
 from projects.forms import ProjectForm
 from projects.models import Project
+from projects.service import auth_required_json, paginate
 
 
 def project_list(request):
-    """Home page: all projects, newest first, paginated by constants.PROJECTS_PER_PAGE (currently 12)."""
+    """Home page: all projects, newest first, paginated by PROJECTS_PER_PAGE (12)."""
     projects = (Project.objects
-            .select_related("owner")
-            .prefetch_related("participants")      # для доступа к участникам
-            .annotate(participants_count=Count("participants"))  # для количества
-            .order_by("-created_at"))
+                .select_related("owner")
+                .prefetch_related("participants")
+                .annotate(participants_count=Count("participants"))
+                .order_by("-created_at"))
     page_obj = paginate(projects, request, constants.PROJECTS_PER_PAGE)
     return render(
         request,
@@ -32,10 +30,10 @@ def project_list(request):
 def favorite_projects(request):
     """Favorites page: projects the current user marked as favorite."""
     projects = (request.user.favorites
-            .select_related("owner")
-            .prefetch_related("participants")
-            .annotate(participants_count=Count("participants"))
-            .order_by("-created_at"))
+                .select_related("owner")
+                .prefetch_related("participants")
+                .annotate(participants_count=Count("participants"))
+                .order_by("-created_at"))
     return render(
         request, "projects/favorite_projects.html", {"projects": projects}
     )
@@ -44,8 +42,8 @@ def favorite_projects(request):
 def project_details(request, project_id):
     """Detailed project page."""
     project = get_object_or_404(
-    	Project.objects.select_related("owner").prefetch_related("participants"),
-    	pk=project_id
+        Project.objects.select_related("owner").prefetch_related("participants"),
+        pk=project_id
     )
     return render(request, "projects/project-details.html", {"project": project})
 
@@ -88,10 +86,9 @@ def toggle_favorite(request, project_id):
         return auth_required_json()
 
     project = get_object_or_404(Project, pk=project_id)
-# Проверяем, был ли проект в избранном, и сразу присваиваем переменной
     if (favorited := request.user.favorites.filter(pk=project.pk).exists()):
         request.user.favorites.remove(project)
-        favorited = False   # после удаления статус меняется
+        favorited = False
     else:
         request.user.favorites.add(project)
         favorited = True
@@ -107,11 +104,13 @@ def complete_project(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     if request.user != project.owner and not request.user.is_staff:
         return JsonResponse(
-            {"status": "error", "detail": "Недостаточно прав."}, status=HTTPStatus.FORBIDDEN
+            {"status": "error", "detail": "Недостаточно прав."},
+            status=HTTPStatus.FORBIDDEN
         )
     if project.status != constants.STATUS_OPEN:
         return JsonResponse(
-            {"status": "error", "detail": "Проект уже закрыт."}, status=HTTPStatus.BAD_REQUEST
+            {"status": "error", "detail": "Проект уже закрыт."},
+            status=HTTPStatus.BAD_REQUEST
         )
 
     project.status = constants.STATUS_CLOSED

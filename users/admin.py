@@ -1,10 +1,6 @@
-from django import forms
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from users.forms import AdminUserCreationForm, AdminUserChangeForm
-
 from users.models import User
+from users.forms import AdminUserCreationForm, AdminUserChangeForm
 
 
 @admin.register(User)

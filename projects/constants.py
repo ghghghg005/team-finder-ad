@@ -8,11 +8,6 @@ STATUS_MAX_LENGTH = 6
 STATUS_OPEN = "open"
 STATUS_CLOSED = "closed"
 STATUS_CHOICES = [
-    (STATUS_OPEN, "Open"),
-    (STATUS_CLOSED, "Closed"),
-]
-# Labels shown to the user in the create/edit form's dropdown.
-STATUS_FORM_CHOICES = [
     (STATUS_OPEN, "Открыт"),
     (STATUS_CLOSED, "Закрыт"),
 ]

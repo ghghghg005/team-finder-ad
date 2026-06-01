@@ -7,7 +7,7 @@ ENV_LIST_SEPARATOR = ","
 DEFAULT_ALLOWED_HOSTS = "localhost,127.0.0.1"
 
 # Where unauthenticated users are redirected from login-protected pages.
-LOGIN_URL = "/users/login/"
+LOGIN_URL = "users:login"
 
 # Default template variant (TeamFinder ships three template sets: 1, 2 and 3).
 DEFAULT_TASK_VERSION = "1"

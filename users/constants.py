@@ -12,17 +12,28 @@ AVATAR_SIZE = 256  # px, square
 AVATAR_TEXT_COLOR = (255, 255, 255)
 # A palette of calm, well-balanced background colours. White text stays
 # readable on every one of them while none of them is harshly contrasting.
+COLOR_MUTED_BLUE = (94, 124, 159)
+COLOR_SAGE_GREEN = (108, 142, 104)
+COLOR_DUSTY_ROSE = (159, 116, 116)
+COLOR_SOFT_VIOLET = (130, 118, 156)
+COLOR_WARM_SAND = (176, 137, 104)
+COLOR_TEAL = (94, 148, 148)
+COLOR_MAUVE = (150, 120, 140)
+COLOR_SLATE = (120, 130, 150)
+COLOR_OLIVE = (140, 150, 110)
+COLOR_STEEL_BLUE = (110, 140, 160)
+
 AVATAR_BACKGROUND_COLORS = [
-    (94, 124, 159),   # muted blue
-    (108, 142, 104),  # sage green
-    (159, 116, 116),  # dusty rose
-    (130, 118, 156),  # soft violet
-    (176, 137, 104),  # warm sand
-    (94, 148, 148),   # teal
-    (150, 120, 140),  # mauve
-    (120, 130, 150),  # slate
-    (140, 150, 110),  # olive
-    (110, 140, 160),  # steel blue
+    COLOR_MUTED_BLUE,
+    COLOR_SAGE_GREEN,
+    COLOR_DUSTY_ROSE,
+    COLOR_SOFT_VIOLET,
+    COLOR_WARM_SAND,
+    COLOR_TEAL,
+    COLOR_MAUVE,
+    COLOR_SLATE,
+    COLOR_OLIVE,
+    COLOR_STEEL_BLUE,
 ]
 AVATAR_FONT_PATH = "fonts/Neue_Haas_Grotesk_Display_Pro_75_Bold.otf"
 AVATAR_FONT_RATIO = 0.5  # font size relative to the avatar side

@@ -2,21 +2,12 @@ import re
 from urllib.parse import urlparse
 
 from django import forms
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
 from users import constants
 from users.models import User
-
-
-def validate_github_url(url):
-    """Ensure a (already well-formed) URL points to github.com."""
-    if not url:
-        return url
-    host = urlparse(url).netloc.lower().split("@")[-1].split(":")[0]
-    if host not in constants.GITHUB_ALLOWED_HOSTS:
-        raise ValidationError(constants.GITHUB_ERROR)
-    return url
+from users.mixins import GithubUrlMixin
 
 
 class RegisterForm(forms.ModelForm):
@@ -43,7 +34,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(label="Пароль", widget=forms.PasswordInput)
 
 
-class EditProfileForm(forms.ModelForm):
+class EditProfileForm(GithubUrlMixin, forms.ModelForm):
     """Profile editing form with phone and GitHub validation."""
 
     class Meta:
@@ -72,12 +63,48 @@ class EditProfileForm(forms.ModelForm):
 
         return canonical
 
-    def clean_github_url(self):
-        return validate_github_url((self.cleaned_data.get("github_url") or "").strip())
-
 
 class ChangePasswordForm(PasswordChangeForm):
     """Password change form (old_password, new_password1, new_password2)."""
 
     # Django's PasswordChangeForm already exposes exactly the three fields the
     # template expects; subclassing keeps a project-specific name/hook point.
+
+
+class AdminUserCreationForm(forms.ModelForm):
+    """Admin form to create a user with a properly hashed password."""
+    password1 = forms.CharField(label="Пароль", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Подтверждение пароля", widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ("email", "name", "surname")
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Пароли не совпадают.")
+        return password2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
+
+
+class AdminUserChangeForm(forms.ModelForm):
+    """Admin form to edit a user; password is shown as a hash with a change link."""
+    password = ReadOnlyPasswordHashField(
+        label="Пароль",
+        help_text=(
+            "Пароли хранятся в зашифрованном виде. Изменить пароль можно "
+            'по <a href="../password/">этой ссылке</a>.'
+        ),
+    )
+
+    class Meta:
+        model = User
+        fields = "__all__"

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Local config & data (provided at runtime via env_file / volumes)
+.env
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# VCS & tooling
+.git/
+.gitignore
+.github/
+
+# Docs not needed in the image
+docs/
+*.md

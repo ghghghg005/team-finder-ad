@@ -1,4 +1,6 @@
-/team_finder/media/
+# User-uploaded media (generated at runtime, e.g. avatars) and collected static
+/media/
+/staticfiles/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
